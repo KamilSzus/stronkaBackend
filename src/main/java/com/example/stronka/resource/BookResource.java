@@ -4,7 +4,6 @@ import com.example.stronka.Book;
 import com.example.stronka.Service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -14,9 +13,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Collection;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 @CrossOrigin(origins = "http://localhost:8081")
 @RestController
@@ -26,28 +28,75 @@ public class BookResource {
     @Autowired
     private BookService bookService;
 
-    @GetMapping
-    public ResponseEntity<Collection<Book>> findAll() {
-        return new ResponseEntity<>(bookService.findAll(), HttpStatus.OK);
+    @GetMapping("/books")
+    public ResponseEntity<List<Book>> getAllBooks(@RequestParam(required = false) String title) {
+        try {
+            List<Book> bookList = new ArrayList<>();
+            if (title == null)
+                bookList.addAll(bookService.findAll());
+            else
+                bookList.addAll(bookService.findByTitle(title));
+            if (bookList.isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+            return new ResponseEntity<>(bookList, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
-    @GetMapping("{id}")
-    public ResponseEntity<Book> findById(@PathVariable long id) {
-        return new ResponseEntity<>(bookService.findById(id), HttpStatus.OK);
+    @GetMapping("/books/{id}")
+    public ResponseEntity<Book> getBooksById(@PathVariable("id") long id) {
+        Optional<Book> booksData = bookService.findById(id);
+        return booksData.map(book -> new ResponseEntity<>(book, HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Book> save(@RequestBody Book book) {
-        return new ResponseEntity<>(bookService.save(book), HttpStatus.OK);
+    @PostMapping("/books")
+    public ResponseEntity<Book> createBook(@RequestBody Book book) {
+        try {
+            Book _book = bookService
+                    .save(new Book(book.getTitle(), book.getAuthor(), book.getPrice(),book.getType()));
+            return new ResponseEntity<>(_book, HttpStatus.CREATED);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
-    @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Book> update(Book book) {
-        return new ResponseEntity<>(bookService.update(book), HttpStatus.OK);
+    @PutMapping("/books/{id}")
+    public ResponseEntity<Book> updateBooks(@PathVariable("id") long id, @RequestBody Book book) {
+        Optional<Book> bookData = bookService.findById(id);
+        if (bookData.isPresent()) {
+            Book _book = bookData.get();
+            _book.setTitle(book.getTitle());
+            _book.setAuthor(book.getAuthor());
+            _book.setPrice(book.getPrice());
+            _book.setType(book.getType());
+            return new ResponseEntity<>(bookService.save(_book), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
-    @DeleteMapping("{id}")
-    public ResponseEntity<Book> deleteById(@PathVariable Long id) {
-        return new ResponseEntity<>(bookService.deleteById(id), HttpStatus.OK);
+    @DeleteMapping("/books/{id}")
+    public ResponseEntity<HttpStatus> deleteBooks(@PathVariable("id") long id) {
+        try {
+            bookService.deleteById(id);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/tutorials/published")
+    public ResponseEntity<List<Book>> findByAuthor(String author) {
+        try {
+            List<Book> bookList = bookService.findByAuthor(author);
+            if (bookList.isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+            return new ResponseEntity<>(bookList, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 }

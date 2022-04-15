@@ -30,6 +30,13 @@ public class Book {
     @Column(name = "type")
     private String type;
 
+    public Book(String title, String author, double price, String type) {
+        this.author = author;
+        this.price = price;
+        this.type = type;
+        this.title = title;
+    }
+
     public String getAuthor() {
         return author;
     }

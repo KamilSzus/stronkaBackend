@@ -1,14 +1,12 @@
 package com.example.stronka.Service;
 
 import com.example.stronka.Book;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.Collection;
+import java.util.List;
 
-public interface BookService {
-    Collection<Book> findAll();
+public interface BookService extends JpaRepository<Book, Long> {
+    List<Book> findByTitle(String title);
+    List<Book> findByAuthor(String title);
 
-    Book findById(long id);
-    Book save(Book book);
-    Book update(Book book);
-    Book deleteById(Long id);
 }
