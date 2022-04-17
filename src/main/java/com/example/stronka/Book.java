@@ -30,11 +30,16 @@ public class Book {
     @Column(name = "type")
     private String type;
 
-    public Book(String title, String author, double price, String type) {
+    public Book(String title, String author, double price, String type,String cover) {
         this.author = author;
         this.price = price;
         this.type = type;
         this.title = title;
+        this.cover = cover;
+    }
+
+    public Book() {
+
     }
 
     public String getAuthor() {

@@ -20,15 +20,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-@CrossOrigin(origins = "http://localhost:8081")
+@CrossOrigin
 @RestController
-@RequestMapping("/api")
-public class BookResource {
+@RequestMapping("/items")
+public class BookController {
 
     @Autowired
     private BookService bookService;
 
-    @GetMapping("/books")
+    @GetMapping("/getAllBooks")
     public ResponseEntity<List<Book>> getAllBooks(@RequestParam(required = false) String title) {
         try {
             List<Book> bookList = new ArrayList<>();
@@ -51,11 +51,11 @@ public class BookResource {
         return booksData.map(book -> new ResponseEntity<>(book, HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
-    @PostMapping("/books")
+    @PostMapping("/CreateBook")
     public ResponseEntity<Book> createBook(@RequestBody Book book) {
         try {
             Book _book = bookService
-                    .save(new Book(book.getTitle(), book.getAuthor(), book.getPrice(),book.getType()));
+                    .save(new Book(book.getTitle(), book.getAuthor(), book.getPrice(), book.getType(),book.getCover()));
             return new ResponseEntity<>(_book, HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -87,10 +87,23 @@ public class BookResource {
         }
     }
 
-    @GetMapping("/tutorials/published")
+    @GetMapping("/books/author")
     public ResponseEntity<List<Book>> findByAuthor(String author) {
         try {
             List<Book> bookList = bookService.findByAuthor(author);
+            if (bookList.isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+            return new ResponseEntity<>(bookList, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/books/title")
+    public ResponseEntity<List<Book>> findByTitle(String title) {
+        try {
+            List<Book> bookList = bookService.findByTitle(title);
             if (bookList.isEmpty()) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             }
