@@ -1,6 +1,6 @@
 package com.example.stronka.Service;
 
-import com.example.stronka.Book;
+import com.example.stronka.temp.Book;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

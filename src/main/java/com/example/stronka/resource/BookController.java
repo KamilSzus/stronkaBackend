@@ -1,6 +1,6 @@
 package com.example.stronka.resource;
 
-import com.example.stronka.Book;
+import com.example.stronka.temp.Book;
 import com.example.stronka.Service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -110,6 +110,23 @@ public class BookController {
             return new ResponseEntity<>(bookList, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/books/pageNumber{pageNumber}/NumberOfItems{itemsNumber}")
+    public ResponseEntity<List<Book>> getExpectedBooks(@PathVariable int itemsNumber, @PathVariable int pageNumber) {
+        List<Book> bookList = new ArrayList<>(bookService.findAll());
+        if (bookList.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        int startIndex = 0;
+        if (pageNumber != 1) {
+            startIndex+=pageNumber-1;
+        }
+        if(itemsNumber * pageNumber > bookList.size()){
+            return new ResponseEntity<>(bookList.subList(startIndex * itemsNumber, bookList.size()), HttpStatus.OK);
+        }else{
+            return new ResponseEntity<>(bookList.subList(startIndex * itemsNumber, itemsNumber * pageNumber), HttpStatus.OK);
         }
     }
 }

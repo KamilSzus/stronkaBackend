@@ -1,6 +1,6 @@
 //package com.example.stronka.Service.implementation;
 //
-//import com.example.stronka.Book;
+//import com.example.stronka.temp.Book;
 //import com.example.stronka.Service.BookService;
 //import org.springframework.stereotype.Service;
 //
