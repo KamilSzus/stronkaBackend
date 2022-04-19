@@ -1,7 +1,5 @@
-package com.example.stronka.resource;
+package com.example.stronka.Book;
 
-import com.example.stronka.temp.Book;
-import com.example.stronka.Service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,16 +24,16 @@ import java.util.Optional;
 public class BookController {
 
     @Autowired
-    private BookService bookService;
+    private BookRepository bookRepository;
 
     @GetMapping("/getAllBooks")
     public ResponseEntity<List<Book>> getAllBooks(@RequestParam(required = false) String title) {
         try {
             List<Book> bookList = new ArrayList<>();
             if (title == null)
-                bookList.addAll(bookService.findAll());
+                bookList.addAll(bookRepository.findAll());
             else
-                bookList.addAll(bookService.findByTitle(title));
+                bookList.addAll(bookRepository.findByTitle(title));
             if (bookList.isEmpty()) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             }
@@ -47,14 +45,14 @@ public class BookController {
 
     @GetMapping("/books/{id}")
     public ResponseEntity<Book> getBooksById(@PathVariable("id") long id) {
-        Optional<Book> booksData = bookService.findById(id);
+        Optional<Book> booksData = bookRepository.findById(id);
         return booksData.map(book -> new ResponseEntity<>(book, HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     @PostMapping("/CreateBook")
     public ResponseEntity<Book> createBook(@RequestBody Book book) {
         try {
-            Book _book = bookService
+            Book _book = bookRepository
                     .save(new Book(book.getTitle(), book.getAuthor(), book.getPrice(), book.getType(),book.getCover()));
             return new ResponseEntity<>(_book, HttpStatus.CREATED);
         } catch (Exception e) {
@@ -64,14 +62,14 @@ public class BookController {
 
     @PutMapping("/books/{id}")
     public ResponseEntity<Book> updateBooks(@PathVariable("id") long id, @RequestBody Book book) {
-        Optional<Book> bookData = bookService.findById(id);
+        Optional<Book> bookData = bookRepository.findById(id);
         if (bookData.isPresent()) {
             Book _book = bookData.get();
             _book.setTitle(book.getTitle());
             _book.setAuthor(book.getAuthor());
             _book.setPrice(book.getPrice());
             _book.setType(book.getType());
-            return new ResponseEntity<>(bookService.save(_book), HttpStatus.OK);
+            return new ResponseEntity<>(bookRepository.save(_book), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -80,7 +78,7 @@ public class BookController {
     @DeleteMapping("/books/{id}")
     public ResponseEntity<HttpStatus> deleteBooks(@PathVariable("id") long id) {
         try {
-            bookService.deleteById(id);
+            bookRepository.deleteById(id);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -90,7 +88,7 @@ public class BookController {
     @GetMapping("/books/author")
     public ResponseEntity<List<Book>> findByAuthor(String author) {
         try {
-            List<Book> bookList = bookService.findByAuthor(author);
+            List<Book> bookList = bookRepository.findByAuthor(author);
             if (bookList.isEmpty()) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             }
@@ -103,7 +101,7 @@ public class BookController {
     @GetMapping("/books/title")
     public ResponseEntity<List<Book>> findByTitle(String title) {
         try {
-            List<Book> bookList = bookService.findByTitle(title);
+            List<Book> bookList = bookRepository.findByTitle(title);
             if (bookList.isEmpty()) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             }
@@ -115,7 +113,7 @@ public class BookController {
 
     @GetMapping("/books/pageNumber{pageNumber}/NumberOfItems{itemsNumber}")
     public ResponseEntity<List<Book>> getExpectedBooks(@PathVariable int itemsNumber, @PathVariable int pageNumber) {
-        List<Book> bookList = new ArrayList<>(bookService.findAll());
+        List<Book> bookList = new ArrayList<>(bookRepository.findAll());
         if (bookList.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }

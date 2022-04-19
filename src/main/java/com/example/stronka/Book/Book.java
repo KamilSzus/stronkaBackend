@@ -1,4 +1,4 @@
-package com.example.stronka.temp;
+package com.example.stronka.Book;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
