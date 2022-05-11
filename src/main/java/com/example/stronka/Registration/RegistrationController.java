@@ -2,6 +2,8 @@ package com.example.stronka.Registration;
 
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,7 +19,13 @@ public class RegistrationController {
     private final RegistrationService registrationService;
 
     @PostMapping
-    public String register(@RequestBody RegistrationRequest request){
-        return registrationService.register(request);
+    public ResponseEntity<String> register(@RequestBody RegistrationRequest request){
+        String response = registrationService.register(request);
+        return switch (response) {
+            case "Created" -> new ResponseEntity<>(response, HttpStatus.OK);
+            case "Email is taken" -> new ResponseEntity<>(response, HttpStatus.I_AM_A_TEAPOT);
+            case "Email is incorrect" -> new ResponseEntity<>(response, HttpStatus.NOT_ACCEPTABLE);
+            default -> new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        };
     }
 }

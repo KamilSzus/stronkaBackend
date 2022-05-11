@@ -22,12 +22,12 @@ public class UserService implements UserDetailsService {
 
     public String signUpUser(User user) {
         if (userRepository.findByEmail(user.getEmail()).isPresent()) {
-            throw new IllegalStateException("Email is taken");
+            return "Email is taken";
         }
         String encodedPassword = encoder.encode(user.getPassword());
         user.setPassword(encodedPassword);
         userRepository.save(user);
 
-        return "nulllllllll";
+        return "Created";
     }
 }

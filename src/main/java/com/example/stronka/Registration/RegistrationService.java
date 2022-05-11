@@ -18,7 +18,7 @@ public class RegistrationService {
         if(isCorrectEmail){
             return userService.signUpUser(new User(request.email(),request.name(),request.password(), UserRole.STANDARD_USER));
         }else{
-            throw new IllegalStateException();
+           return "Email is incorrect";
         }
     }
 }
