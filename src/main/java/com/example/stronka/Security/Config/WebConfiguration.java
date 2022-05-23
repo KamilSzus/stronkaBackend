@@ -12,6 +12,9 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 @Configuration
 @EnableWebSecurity
@@ -30,7 +33,9 @@ public class WebConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET,"/items/books/pageNumber*/NumberOfItems*").permitAll()
                 .antMatchers(HttpMethod.POST,"/registration").permitAll()
                 .anyRequest().authenticated()
-                .and().formLogin();
+                .and().formLogin()
+                .and()
+                .cors();
     }
 
     @Override
@@ -45,6 +50,5 @@ public class WebConfiguration extends WebSecurityConfigurerAdapter {
         provider.setUserDetailsService(user);
         return provider;
     }
-
 
 }
