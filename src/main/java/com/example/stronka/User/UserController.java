@@ -21,7 +21,7 @@ public class UserController {
     UserRepository userRepository;
 
     @GetMapping("/getAllUser")
-    public ResponseEntity<List<User>> getAllBooks(){
+    public ResponseEntity<List<User>> getAllUsers(){
         List<User> userList = new ArrayList<>(userRepository.findAll());
         if(userList.isEmpty()){
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);

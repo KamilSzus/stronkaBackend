@@ -28,6 +28,7 @@ public class WebConfiguration extends WebSecurityConfigurerAdapter {
     public void configure(HttpSecurity http) throws Exception {
         http.csrf().disable().authorizeRequests()
                 .antMatchers("/").permitAll()
+                .antMatchers(HttpMethod.POST,"/login/*").permitAll()
                 .antMatchers(HttpMethod.GET, "/items/*").permitAll()
                 .antMatchers(HttpMethod.POST, "/items/*").permitAll()
                 .antMatchers(HttpMethod.GET, "/items/books/pageNumber*/NumberOfItems*").permitAll()
