@@ -28,10 +28,10 @@ public class WebConfiguration extends WebSecurityConfigurerAdapter {
     public void configure(HttpSecurity http) throws Exception {
         http.csrf().disable().authorizeRequests()
                 .antMatchers("/").permitAll()
-                .antMatchers(HttpMethod.GET,"/items/*").permitAll()
-                .antMatchers(HttpMethod.POST,"/items/*").permitAll()
-                .antMatchers(HttpMethod.GET,"/items/books/pageNumber*/NumberOfItems*").permitAll()
-                .antMatchers(HttpMethod.POST,"/registration").permitAll()
+                .antMatchers(HttpMethod.GET, "/items/*").permitAll()
+                .antMatchers(HttpMethod.POST, "/items/*").permitAll()
+                .antMatchers(HttpMethod.GET, "/items/books/pageNumber*/NumberOfItems*").permitAll()
+                .antMatchers(HttpMethod.POST, "/registration").permitAll()
                 .anyRequest().authenticated()
                 .and().formLogin()
                 .and()
@@ -44,7 +44,7 @@ public class WebConfiguration extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    public DaoAuthenticationProvider daoAuthenticationProvider(){
+    public DaoAuthenticationProvider daoAuthenticationProvider() {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
         provider.setPasswordEncoder(bCryptPasswordEncoder);
         provider.setUserDetailsService(user);

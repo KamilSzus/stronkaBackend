@@ -11,13 +11,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping( "/registration")
+@RequestMapping("/registration")
 public class RegistrationController {
 
     private final RegistrationService registrationService;
 
     @PostMapping
-    public ResponseEntity<String> register(@RequestBody RegistrationRequest request){
+    public ResponseEntity<String> register(@RequestBody RegistrationRequest request) {
         String response = registrationService.register(request);
         return switch (response) {
             case "Created" -> new ResponseEntity<>(response, HttpStatus.OK);
