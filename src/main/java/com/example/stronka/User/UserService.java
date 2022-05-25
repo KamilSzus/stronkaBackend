@@ -30,4 +30,9 @@ public class UserService implements UserDetailsService {
 
         return "Created";
     }
+
+    public User loadUserByEmail(String email)throws UsernameNotFoundException{
+        return userRepository.findByEmail(email)
+                .orElseThrow(()-> new UsernameNotFoundException("user with this "+ email +" email don't exist"));
+    }
 }
