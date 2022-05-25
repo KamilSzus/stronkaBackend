@@ -29,6 +29,7 @@ public class WebConfiguration extends WebSecurityConfigurerAdapter {
         http.csrf().disable().authorizeRequests()
                 .antMatchers("/").permitAll()
                 .antMatchers(HttpMethod.POST,"/login/*").permitAll()
+                .antMatchers(HttpMethod.GET,"/users/*").permitAll()
                 .antMatchers(HttpMethod.GET, "/items/*").permitAll()
                 .antMatchers(HttpMethod.POST, "/items/*").permitAll()
                 .antMatchers(HttpMethod.GET, "/items/books/pageNumber*/NumberOfItems*").permitAll()
