@@ -40,7 +40,7 @@ public class UserController {
     @DeleteMapping("/deleteUser/{email}")
     public ResponseEntity<User> deleteUser(@PathVariable String email){
         List<User> user = userRepository.deleteByEmail(email);
-        if(user!=null){
+        if(!user.isEmpty()){
             return new ResponseEntity<>(user.get(0),HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
