@@ -1,4 +1,6 @@
 package com.example.stronka.Registration;
 
-public record RegistrationRequest(String name, String email, String password) {
+import com.example.stronka.User.UserRole;
+
+public record RegistrationRequest(String name, String email, String password, UserRole role) {
 }
