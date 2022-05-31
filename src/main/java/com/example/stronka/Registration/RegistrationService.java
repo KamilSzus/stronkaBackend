@@ -16,7 +16,11 @@ public class RegistrationService {
     public String register(RegistrationRequest request) {
         boolean isCorrectEmail = emailValidator.test(request.email());
         if(isCorrectEmail){
-            return userService.signUpUser(new User(request.email(),request.name(),request.password(), request.role()));
+            if (request.role()==null){
+                return userService.signUpUser(new User(request.email(),request.name(),request.password(), UserRole.STANDARD_USER));
+            }else{
+                return userService.signUpUser(new User(request.email(),request.name(),request.password(), request.role()));
+            }
         }else{
            return "Email is incorrect";
         }
