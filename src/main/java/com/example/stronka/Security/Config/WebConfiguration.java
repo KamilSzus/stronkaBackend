@@ -33,6 +33,7 @@ public class WebConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST,"/users/*").permitAll()
                 .antMatchers(HttpMethod.DELETE,"/users//deleteUser/*").permitAll()
                 .antMatchers(HttpMethod.GET, "/items/*").permitAll()
+                .antMatchers(HttpMethod.GET, "/items/books/*").permitAll()
                 .antMatchers(HttpMethod.POST, "/items/*").permitAll()
                 .antMatchers(HttpMethod.GET, "/items/books/pageNumber*/NumberOfItems*").permitAll()
                 .antMatchers(HttpMethod.POST, "/registration").permitAll()

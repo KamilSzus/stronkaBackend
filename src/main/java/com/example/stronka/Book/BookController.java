@@ -43,7 +43,7 @@ public class BookController {
         }
     }
 
-    @GetMapping("/books/{id}")
+    @PostMapping("/books/{id}")
     public ResponseEntity<Book> getBooksById(@PathVariable("id") long id) {
         Optional<Book> booksData = bookRepository.findById(id);
         return booksData.map(book -> new ResponseEntity<>(book, HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
@@ -98,8 +98,8 @@ public class BookController {
         }
     }
 
-    @GetMapping("/books/title")
-    public ResponseEntity<List<Book>> findByTitle(String title) {
+    @GetMapping("/books/{title}")
+    public ResponseEntity<List<Book>> findByTitle(@PathVariable String title) {
         try {
             List<Book> bookList = bookRepository.findByTitle(title);
             if (bookList.isEmpty()) {
